@@ -11,8 +11,7 @@
     "url": "https://github.com/ennjin/zustand-lit/issues"
   },
   "scripts": {
-    "build": "rollup --config",
-    "prepublishOnly": "npm run build"
+    "build": "rollup --config"
   },
   "author": "https://github.com/ennjin",
   "license": "MIT",
