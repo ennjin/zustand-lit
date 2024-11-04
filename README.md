@@ -7,7 +7,7 @@ A [zustand](https://github.com/pmndrs/zustand) adapter for [lit.js](https://gith
 ### Install
 
 ```
-npm i install zustand zustand-lit
+npm install zustand zustand-lit
 ```
 
 ### Usage
