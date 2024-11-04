@@ -1,6 +1,6 @@
 {
   "name": "zustand-lit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A zustand adapter for lit.js (LitElement)",
   "main": "dist/index.js",
   "repository": {
@@ -24,8 +24,8 @@
     "zustand": "^5.0.1"
   },
   "peerDependencies": {
-    "lit": ">= 3.0.0.",
-    "zustand": ">= 5.0.0"
+    "lit": "^3.2.1",
+    "zustand": "^5.0.1"
   },
   "exports": {
     ".": {
