@@ -1,0 +1,47 @@
+{
+  "name": "zustand-lit",
+  "version": "1.0.0",
+  "description": "A zustand adapter for lit.js (LitElement)",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ennjin/zustand-lit"
+  },
+  "bugs": {
+    "url": "https://github.com/ennjin/zustand-lit/issues"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "https://github.com/ennjin",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.1",
+    "lit": "^3.2.1",
+    "rollup": "^4.24.4",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3",
+    "zustand": "^5.0.1"
+  },
+  "peerDependencies": {
+    "lit": ">= 3.0.0.",
+    "zustand": ">= 5.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "/dist"
+  ],
+  "keywords": [
+    "zustand",
+    "state",
+    "plugin",
+    "middleware",
+    "typescript",
+    "lit.js"
+  ]
+}
