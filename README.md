@@ -1,18 +1,22 @@
-### zustand-lit
+## zustand-lit
 
-A [zustand](https://github.com/pmndrs/zustand) adapter for [lit.js](https://github.com/lit/lit)
+A [zustand](https://github.com/pmndrs/zustand) adapter for [lit](https://github.com/lit/lit)
 
 **Zustand** is a lightweight state manager for javascript applications
 
-### Install
+## Install
 
 ```
 npm install zustand zustand-lit
 ```
 
-### Usage
+## Usage
 
-- Create a store object
+**There are two ways to use store adapter:**
+ - Class mixin
+ - Class field decorator
+
+1. Create a store object
 
 ```ts
 // app-store.ts
@@ -29,7 +33,9 @@ export const appStore = createStore<AppState>(set => ({
 }));
 ```
 
-- Connect store object to lit element
+#### Use a class mixin
+
+2.1 Connect store object to lit element
 ```ts
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -42,12 +48,36 @@ export class AppComponent extends connect(LitElement, appStore) {
 }
 ```
 
-- Get access to store object through `$state` property
+2.2 Get access to store object through `$state` property
 
 ```ts
 this.$state.count;
-this.$state.setCount(1)
+this.$state.setCount(1);
 ```
 
-### License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+#### Use a class field decorator
+
+2.1 Define a store field
+
+```ts
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { subscribe } from 'zustand-lit';
+
+
+@customElement('app-component')
+export class AppComponent extends LitElement {
+  @subscribe 
+  readonly appStore = appStore;
+}
+```
+
+2.2 Get access to store directly
+
+```ts
+this.appStore.getState().count;
+this.appStore.getState().setCount(1);
+```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details
