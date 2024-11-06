@@ -16,13 +16,16 @@ npm install zustand zustand-lit
  - Class mixin
  - Class field decorator
 
+ Note: You have to choose one style you prefer and don't mix them.
+ For more details you also can take a loot at [unit tests example](./test/test-components.ts)
+
 1. Create a store object
 
 ```ts
 // app-store.ts
 import { createStore } from 'zustand/vanilla';
 
-interface AppState {
+export interface AppState {
   count: number;
   setCount: (count: number) => void;
 }
@@ -63,21 +66,31 @@ this.$state.setCount(1);
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { subscribe } from 'zustand-lit';
-
+import { appStore, AppState } from './app-store.ts'; 
 
 @customElement('app-component')
 export class AppComponent extends LitElement {
+  // subscribe to store object
   @subscribe 
   readonly appStore = appStore;
+
+  // or subscribe to state directly
+  @subscribe(appStore)
+  appState!: AppState;
 }
 ```
 
-2.2 Get access to store directly
+2.2 Get access to store object
 
 ```ts
+// Store
 this.appStore.getState().count;
 this.appStore.getState().setCount(1);
+// Or state
+this.appState.count;
+this.appState.setCount(1);
 ```
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details
