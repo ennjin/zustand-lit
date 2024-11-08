@@ -1,5 +1,10 @@
 ## zustand-lit
 
+[![npm](https://img.shields.io/npm/v/zustand-lit)](https://www.npmjs.com/package/zustand-lit)
+
+[![Build](https://img.shields.io/github/actions/workflow/status/ennjin/zustand-lit/publish.yml)](https://github.com/ennjin/zustand-lit/actions?query=workflow%3APublish)
+
+
 A [zustand](https://github.com/pmndrs/zustand) adapter for [lit](https://github.com/lit/lit)
 
 **Zustand** is a lightweight state manager for javascript applications
@@ -73,22 +78,14 @@ export class AppComponent extends LitElement {
   // subscribe to store object
   @subscribe 
   readonly appStore = appStore;
-
-  // or subscribe to state directly
-  @subscribe(appStore)
-  appState!: AppState;
 }
 ```
 
 2.2 Get access to store object
 
 ```ts
-// Store
 this.appStore.getState().count;
 this.appStore.getState().setCount(1);
-// Or state
-this.appState.count;
-this.appState.setCount(1);
 ```
 
 

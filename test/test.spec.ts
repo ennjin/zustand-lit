@@ -8,8 +8,7 @@ import './test-components';
 
 const TAGS_NAMES = [
   'test-component-connect',
-  'test-component-subscribe-store',
-  'test-component-subscribe-state',
+  'test-component-subscribe',
 ];
 
 
