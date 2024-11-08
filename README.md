@@ -1,7 +1,6 @@
 ## zustand-lit
 
 [![npm](https://img.shields.io/npm/v/zustand-lit)](https://www.npmjs.com/package/zustand-lit)
-
 [![Build](https://img.shields.io/github/actions/workflow/status/ennjin/zustand-lit/publish.yml)](https://github.com/ennjin/zustand-lit/actions?query=workflow%3APublish)
 
 
