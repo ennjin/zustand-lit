@@ -25,4 +25,4 @@ export function subscribe<T extends ReactiveElement>(
       unsubscribe();
     }
   };
-}
+} 

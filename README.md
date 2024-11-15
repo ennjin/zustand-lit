@@ -18,12 +18,14 @@ npm install zustand zustand-lit
 
 **There are two ways to use store adapter:**
  - Class mixin
- - Class field decorator
+ - Class decorator
+ - Class field decorator [deprecated]
 
  Note: You have to choose one style you prefer and don't mix them.
- For more details you also can take a loot at [unit tests example](./test/test-components.ts)
+ For more details you also can take a look at [unit tests example](./test/test-components.ts)
 
-1. Create a store object
+ 
+[1] Create a store object
 
 ```ts
 // app-store.ts
@@ -40,9 +42,10 @@ export const appStore = createStore<AppState>(set => ({
 }));
 ```
 
-#### Use a class mixin
+[2] Use one of availables bridges
 
-2.1 Connect store object to lit element
+[2.1] `connect` mixin
+
 ```ts
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -55,32 +58,49 @@ export class AppComponent extends connect(LitElement, appStore) {
 }
 ```
 
-2.2 Get access to store object through `$state` property
+Get access to store object through `$state` property
 
 ```ts
 this.$state.count;
 this.$state.setCount(1);
 ```
 
-#### Use a class field decorator
+[2.2] `observe` decorator
 
-2.1 Define a store field
+```ts
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { observe } from 'zustand-lit';
+import { appStore } from './app-store.ts'; 
+
+@customElement('app-component')
+@observe(appStore)
+export class AppComponent extends LitElement { }
+```
+
+Read the state
+
+```ts
+appStore.getState().count;
+appStore.getState().setCount(1);
+```
+
+[2.3][deprecated] `subscribe` decorator
 
 ```ts
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { subscribe } from 'zustand-lit';
-import { appStore, AppState } from './app-store.ts'; 
+import { appStore } from './app-store.ts'; 
 
 @customElement('app-component')
 export class AppComponent extends LitElement {
-  // subscribe to store object
   @subscribe 
   readonly appStore = appStore;
 }
 ```
 
-2.2 Get access to store object
+Read the state
 
 ```ts
 this.appStore.getState().count;

@@ -1,8 +1,9 @@
 {
   "name": "zustand-lit",
-  "version": "1.1.0",
-  "description": "A zustand adapter for lit.js (LitElement)",
+  "version": "1.2.0",
+  "description": "A zustand adapter for lit (LitElement)",
   "main": "dist/index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/ennjin/zustand-lit"
@@ -12,6 +13,7 @@
   },
   "scripts": {
     "build": "rollup --config",
+    "postbuild": "node ./scripts/postbuild.js",
     "test": "web-test-runner"
   },
   "author": "https://github.com/ennjin",
@@ -36,6 +38,7 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },
@@ -43,11 +46,15 @@
     "/dist"
   ],
   "keywords": [
-    "zustand",
-    "state",
-    "plugin",
+    "adapter",
+    "decorator",
+    "lit",
+    "manager",
     "middleware",
+    "plugin",
+    "state",
+    "store",
     "typescript",
-    "lit"
+    "zustand"
   ]
 }

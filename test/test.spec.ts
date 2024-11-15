@@ -9,6 +9,7 @@ import './test-components';
 const TAGS_NAMES = [
   'test-component-connect',
   'test-component-subscribe',
+  'test-component-observe',
 ];
 
 

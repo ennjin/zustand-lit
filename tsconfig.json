@@ -9,7 +9,6 @@
     "moduleResolution": "Bundler",
     "isolatedModules": true,
     "moduleDetection": "force",
-    "declaration": true,
     "outDir": "dist",
 
     /* Linting */
@@ -20,6 +19,6 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src",
+    "src", "scripts/add-typings.ts",
   ]
 }
