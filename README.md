@@ -19,7 +19,6 @@ npm install zustand zustand-lit
 **There are two ways to use store adapter:**
  - Class mixin
  - Class decorator
- - Class field decorator [deprecated]
 
  Note: You have to choose one style you prefer and don't mix them.
  For more details you also can take a look at [unit tests example](./test/test-components.ts)
@@ -42,7 +41,7 @@ export const appStore = createStore<AppState>(set => ({
 }));
 ```
 
-[2] Use one of availables bridges
+[2] Use one of available bridges
 
 [2.1] `connect` mixin
 
@@ -58,7 +57,7 @@ export class AppComponent extends connect(LitElement, appStore) {
 }
 ```
 
-Get access to store object through `$state` property
+Get access to store object with `$state` property
 
 ```ts
 this.$state.count;
