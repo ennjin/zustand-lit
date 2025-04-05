@@ -85,28 +85,5 @@ appStore.getState().count;
 appStore.getState().setCount(1);
 ```
 
-[2.3][deprecated] `subscribe` decorator
-
-```ts
-import { LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { subscribe } from 'zustand-lit';
-import { appStore } from './app-store.ts'; 
-
-@customElement('app-component')
-export class AppComponent extends LitElement {
-  @subscribe 
-  readonly appStore = appStore;
-}
-```
-
-Read the state
-
-```ts
-this.appStore.getState().count;
-this.appStore.getState().setCount(1);
-```
-
-
 ## License
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details

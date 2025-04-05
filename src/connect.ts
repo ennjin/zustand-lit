@@ -23,7 +23,7 @@ export function connect<T extends ReactiveElementCtor, State>(
 
     constructor(...args: any[]) {
       super(...args);
-      this.$state = storeApi.getInitialState();
+      this.$state = storeApi.getState();
     }
 
     connectedCallback(): void {

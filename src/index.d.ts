@@ -10,11 +10,6 @@ type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
 type ZustandLitElementCtor<State> = new(...args: any[]) => ZustandLitElement<State>;
 type Subscription = () => void;
 
-export declare function subscribe<T extends ReactiveElement>(
-  target: T,
-  prop: string
-): void;
-
 export declare function connect<T extends ReactiveElementCtor, State>(
   target: T,
   storeApi: StoreApi<State>
