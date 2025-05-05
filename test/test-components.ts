@@ -5,7 +5,7 @@ import { connect, observe } from '../src';
 
 
 @customElement('test-component-connect')
-export class TestComponent1 extends connect(LitElement, testStore) {
+export class TestComponentConnect extends connect(LitElement, testStore) {
   render() {
     return html`
       <div id="count">${this.$state.count}</div>
@@ -18,7 +18,7 @@ export class TestComponent1 extends connect(LitElement, testStore) {
 
 @customElement('test-component-observe')
 @observe(testStore)
-export class TestComponent3 extends LitElement {
+export class TestComponentObserve extends LitElement {
   render() {
     const { count, setCount } = testStore.getState();
 

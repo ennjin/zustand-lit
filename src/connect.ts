@@ -31,7 +31,7 @@ export function connect<T extends ReactiveElementCtor, State>(
 
       this._unsubscribe = storeApi.subscribe(state => {
         this.$state = state;
-        this.performUpdate();
+        this.requestUpdate();
       });
     }
 
