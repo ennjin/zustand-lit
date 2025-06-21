@@ -2,7 +2,14 @@ import fs from 'fs';
 import path from 'path';
 
 
-const src = path.join(import.meta.dirname, '../src/index.d.ts');
-const dest = path.join(import.meta.dirname, '../dist/index.d.ts');
+const declarations = [
+  'index',
+  'context'
+];
 
-fs.copyFileSync(src, dest);
+for (const file of declarations) {
+  const src = path.join(import.meta.dirname, `../src/${ file }.d.ts`);
+  const dest = path.join(import.meta.dirname, `../dist/${ file }.d.ts`);
+
+  fs.copyFileSync(src, dest);
+}

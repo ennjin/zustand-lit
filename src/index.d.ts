@@ -8,13 +8,14 @@ interface ZustandLitElement<State> extends ReactiveElement {
 
 type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
 type ZustandLitElementCtor<State> = new(...args: any[]) => ZustandLitElement<State>;
-type Subscription = () => void;
 
-export declare function connect<T extends ReactiveElementCtor, State>(
+declare function connect<T extends ReactiveElementCtor, State>(
   target: T,
   storeApi: StoreApi<State>
 ): ZustandLitElementCtor<State> 
 
-export declare function observe(
+declare function observe(
   storeApi: StoreApi<unknown> | StoreApi<unknown>[]
 ): <T extends ReactiveElementCtor>(base: T) => T;
+
+export { connect, observe };
