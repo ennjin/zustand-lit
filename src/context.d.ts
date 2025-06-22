@@ -3,10 +3,16 @@ import type { ReactiveElement } from 'lit';
 
 
 type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
+type Selector<S, R> = (state: S) => R;
 
 interface ProviderOptions<S> {
   context: Context<unknown, S>;
   initialState: S;
+}
+
+interface ConsumerOptions<S, R> {
+  context: Context<unknown, S>;
+  selector: Selector<S, R>;
 }
 
 declare function withZustandProvider<S extends object>(
@@ -18,4 +24,12 @@ declare function updateState<S extends object>(
   nextState?: Partial<S>,
 ): void;
 
-export { withZustandProvider, updateState };
+declare function consumeWithSelector<S extends object, R>(
+  options: ConsumerOptions<S, R>
+): <T extends ReactiveElement>(target: T, property: string) => void;
+
+export { 
+  consumeWithSelector, 
+  updateState,
+  withZustandProvider, 
+ };

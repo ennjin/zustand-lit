@@ -127,7 +127,7 @@ class BearsProvider extends LitElement {
 @customElement('bears-consumer')
 class BearsConsumer extends LitElement {
   @consume({ context: BearContext, subscribe: true })
-  state!: BearsState;
+  state?: BearsState;
 
   addBears() {
     updateState(BearContext, { bears: this.state.bears + 1 });
@@ -144,9 +144,56 @@ class BearsConsumer extends LitElement {
 }
 ```
 
+To get rid of unnecessary renders you can use `consumeWithSelector` decorator
+
+```ts
+import { consumeWithSelector } from 'zustand-lit/context';
+
+
+interface State {
+  bears: number;
+  cows: number;
+  monkeys: number;
+}
+
+const selector = (state: State): number => state.bears;
+
+@customElement('bears-consumer')
+class BearsConsumer extends LitElement {
+  @consumeWithSelector({ context: BearContext, selector })
+  bears?: number;
+}
+```
+
+Also it's recommended using one selector for slice of state
+
+```ts
+import { consumeWithSelector } from 'zustand-lit/context';
+
+
+interface State {
+  bears: number;
+  cows: number;
+  monkeys: number;
+}
+
+type Slice = Pick<State, 'bears' | 'cows'>;
+
+const selectSlice = (state: State): Slice => ({
+  bears: state.bears,
+  cows: state.cows,
+});
+
+@customElement('bears-consumer')
+class BearsConsumer extends LitElement {
+  @consumeWithSelector({ context: BearContext, selector: selectSlice })
+  slice?: Slice;
+}
+```
+
 ## TODO
 
-- [ ] Implement `consumeWithSelector` decorator
+- [x] Implement `consumeWithSelector` decorator
 - [ ] Replace `observe` with `observeWithSelector`
 
 ## License
