@@ -48,8 +48,8 @@ const BearStore = createStore<BearState>(set => ({
 class BearsElement extends connect(LitElement, BearStore) {
   render() {
     return html`
-      <p>${this.state.bears}</p>
-      <button @click=${this.state.addBear}>
+      <p>${this.$state.bears}</p>
+      <button @click=${this.$state.addBear}>
         Add bear
       </button>
     `;
@@ -85,7 +85,7 @@ class BearsElement extends LitElement {
     const { bears } = BearStore.getState();
 
     return html`
-      <p>${ bears }</p>
+      <p>${bears}</p>
       <button @click=${() => this.addBear(bears + 1)}>
         Add bear
       </button>
@@ -103,7 +103,7 @@ For more information take a look at the [docs](https://lit.dev/docs/data/context
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { consume, createContext } from '@lit/context';
-import { withZustandProvider, updateState } from 'zustand-lit';
+import { withZustandProvider, updateState } from 'zustand-lit/context';
 
 
 interface BearState {
@@ -135,7 +135,7 @@ class BearsConsumer extends LitElement {
 
   render() {
     return html`
-      <p>${ state.bears }</p>
+      <p>${state.bears}</p>
       <button @click=${this.addBears}>
         Add bear
       </button>
