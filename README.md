@@ -59,6 +59,7 @@ class BearsElement extends connect(LitElement, BearStore) {
 
 2. Use `observe` decorator
 
+
 ```ts
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -213,7 +214,8 @@ class BearsConsumer extends LitElement {
 ## TODO
 
 - [x] Implement `consumeWithSelector` decorator
-- [ ] Replace `observe` with `observeWithSelector`
+- [ ] Add possibility using multile stores with `connect`. Add `watch` decorator to improve renders
+- [ ] Remove `observe` decorator
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details
