@@ -146,6 +146,14 @@ class BearsConsumer extends LitElement {
 
 To get rid of unnecessary renders you can use `consumeWithSelector` decorator
 
+**Options** 
+
+| Parameter  | Mandatory | Default     | Description                               |
+|------------|-----------|-------------|-------------------------------------------|
+| context    | Yes       | -           | Context object created by `createContext` |
+| selector   | Yes       | -           | A function that extarct data from state   |
+| equalityFn | No        | `Object.is` | A function that lets you skip re-renders  |
+
 ```ts
 import { consumeWithSelector } from 'zustand-lit/context';
 
@@ -165,7 +173,10 @@ class BearsConsumer extends LitElement {
 }
 ```
 
-Also it's recommended using one selector for slice of state
+Also it's recommended using one selector for slice of state.
+To control re-renders you can use `equalityFn` option.
+
+**Note:** `equalityFn` is no needed if primitive types are selected
 
 ```ts
 import { consumeWithSelector } from 'zustand-lit/context';
@@ -184,9 +195,17 @@ const selectSlice = (state: State): Slice => ({
   cows: state.cows,
 });
 
+const skipRender = (left: State, right: State) => {
+  return left.bears === right.bears && left.cows === right.cows;
+}
+
 @customElement('bears-consumer')
 class BearsConsumer extends LitElement {
-  @consumeWithSelector({ context: BearContext, selector: selectSlice })
+  @consumeWithSelector({ 
+    context: BearContext,
+    selector: selectSlice,
+    equalityFn: skipRender
+  })
   slice?: Slice;
 }
 ```

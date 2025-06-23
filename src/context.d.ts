@@ -4,6 +4,7 @@ import type { ReactiveElement } from 'lit';
 
 type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
 type Selector<S, R> = (state: S) => R;
+type EqualityFn<R> = (left: R, right: R) => boolean;
 
 interface ProviderOptions<S> {
   context: Context<unknown, S>;
@@ -13,6 +14,7 @@ interface ProviderOptions<S> {
 interface ConsumerOptions<S, R> {
   context: Context<unknown, S>;
   selector: Selector<S, R>;
+  equalityFn?: EqualityFn<R>;
 }
 
 declare function withZustandProvider<S extends object>(

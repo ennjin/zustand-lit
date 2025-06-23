@@ -11,10 +11,12 @@ import { createStore, StoreApi } from 'zustand/vanilla';
 
 type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
 type Selector<S, R> = (state: S) => R;
+type EqualityFn<R> = (left: R, right: R) => boolean;
 
 interface ConsumerOptions<S, R> {
   context: Context<unknown, S>;
   selector: Selector<S, R>;
+  equalityFn?: EqualityFn<R>;
 }
 
 interface ProviderOptions<S> {
@@ -68,21 +70,28 @@ export function updateState<S extends object>(
 class ConsumerWithSelector<S, R> extends ContextConsumer<Context<unknown, S>, ReactiveElement> {
   selectedValue?: any;
 
-  private _selector: Selector<S, R>;
-  private _originalCallback = this['_callback'];
+  private _options: ConsumerOptions<S, R>;
+  private _originalCallback: ContextCallback<ContextType<Context<unknown, S>>>;
 
   constructor(host: ReactiveElement,
               options: ConsumerOptions<S, R>) {
     super(host, { context: options.context, subscribe: true });
 
-    this._selector = options.selector;
+    this._options = options;
+    this._originalCallback = this['_callback'];
     /* Monkey patching is bad mkay */
     this['_callback'] = this._patchedCallback;
   }
 
   private _patchedCallback: ContextCallback<ContextType<Context<unknown, S>>> = (value, unsubscribe) => {
-    const nextValue = this._selector(value);
-    if (Object.is(this.selectedValue, nextValue)) return;
+    const { selector, equalityFn } = this._options;
+    const nextValue = selector(value);
+    const isEuqual = equalityFn ?? Object.is;
+    const hasNoChanges = isEuqual(this.selectedValue, nextValue);
+
+    if (this.selectedValue != null && hasNoChanges) {
+      return;
+    };
 
     this.selectedValue = nextValue;
     this._originalCallback(value, unsubscribe);
