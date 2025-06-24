@@ -1,21 +1,22 @@
-import type { ReactiveElement } from 'lit';
 import type { StoreApi } from 'zustand';
+import type { ReactiveElement } from 'lit';
 
 
-interface ZustandLitElement<State> extends ReactiveElement {
-  $state: State;
+type Selector<S, R> = (state: S) => R;
+type WatchDecorator = <T extends ReactiveElement>(target: T, property: string) => void;
+
+interface WatchOptions<S, R> {
+  store: StoreApi<S>;
+  selector: Selector<S, R>;
+  equalityFn?: (left: R, right: R) => boolean;
 }
 
-type ReactiveElementCtor = new(...args: any[]) => ReactiveElement;
-type ZustandLitElementCtor<State> = new(...args: any[]) => ZustandLitElement<State>;
+declare function watch<S extends object>(
+  api: StoreApi<S>
+): WatchDecorator;
 
-declare function connect<T extends ReactiveElementCtor, State>(
-  target: T,
-  storeApi: StoreApi<State>
-): ZustandLitElementCtor<State> 
+declare function watchWithSelector<S extends object, R>(
+  options: WatchOptions<S, R>
+): WatchDecorator;
 
-declare function observe(
-  storeApi: StoreApi<unknown> | StoreApi<unknown>[]
-): <T extends ReactiveElementCtor>(base: T) => T;
-
-export { connect, observe };
+export { watch, watchWithSelector };

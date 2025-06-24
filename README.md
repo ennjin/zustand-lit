@@ -14,24 +14,31 @@ A [zustand](https://github.com/pmndrs/zustand) adapter for [lit](https://github.
 npm install zustand zustand-lit
 ```
 
+**Version 2.0.0 breaking changes!**
+
+1. Removed `observe` decorator
+2. Removed `connect` mixin function
+3. Added `watch` and `watchWithSelector` decorators
+
+**Motivation:**
+
+The `connect` and `observe` adapters update the component whenever the state changes. On top of that unnecessary renders are happened. To avoid this problems the new `watchWithSelector` API was created.
+
 ## Usage
 
-**There are three ways to use store adapter:**
- - Class mixin
- - Class decorator
- - Context API (new)
+You have to use `createStore` factory function from `zustand/vanilla` package.
 
- Note: You have to choose one style you prefer and don't mix them.
- For more details you also can take a look at [unit tests example](./test/test-components.ts)
+- Choose `@watch` if you have no many data and/or for static objects (like config, user, etc.)
+- Choose `@watchWithSelector` for performance control
+- Choose `Context API` to create 3d party library
 
- 
-1. Use `connect` mixin
+#### `@watch` and `@watchWithSelector` decorators
 
 ```ts
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { createStore } from 'zustand/vanilla';
-import { connect } from 'zustand-lit';
+import { watch } from 'zustand-lit';
 
 
 interface BearState {
@@ -45,11 +52,13 @@ const BearStore = createStore<BearState>(set => ({
 }));
 
 @customElement('bears')
-class BearsElement extends connect(LitElement, BearStore) {
+class BearsElement extends LitElement {
+  @watch(BearStore) state?: BearState;
+
   render() {
     return html`
-      <p>${this.$state.bears}</p>
-      <button @click=${this.$state.addBear}>
+      <p>${this.state?.bears}</p>
+      <button @click=${this.state?.addBear}>
         Add bear
       </button>
     `;
@@ -57,48 +66,49 @@ class BearsElement extends connect(LitElement, BearStore) {
 }
 ```
 
-2. Use `observe` decorator
+To control renders you are able to use `watchWithSelector` decorator
 
 
 ```ts
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { createStore } from 'zustand/vanilla';
-import { observe } from 'zustand-lit';
+import { watchWithSelector } from 'zustand-lit';
 
 
-interface BearState {
+interface ZooState {
   bears: number;
+  cows: number;
+  monkeys: number;
+  snakes: number;
 }
 
-const BearStore = createStore<BearState>(() => ({
-  bears: 0,
-}));
+const selectBears = (state: ZooState) => state.bears;
 
 @customElement('bears')
-@observe(BearStore) 
 class BearsElement extends LitElement {
-  addBear(bears: number) {
-    BearStore.setState({ bears });
-  }
-
-  render() {
-    const { bears } = BearStore.getState();
-
-    return html`
-      <p>${bears}</p>
-      <button @click=${() => this.addBear(bears + 1)}>
-        Add bear
-      </button>
-    `;
-  }
+  @watchWithSelector({ store: ZooStore, selector: selectBears })
+  bears?: number;
 }
 ```
 
-3. Context API (new)
+#### `watchWithSelector` options
+
+| Parameter  | Mandatory | Default     | Description                               |
+|------------|-----------|-------------|-------------------------------------------|
+| store      | Yes       | -           | Store object created by `createStore`     |
+| selector   | Yes       | -           | A state extractor                         |
+| equalityFn | No        | `Object.is` | A function that lets you skip re-renders  |
+
+
+#### Context API
 
 Before using context api you have to install `@lit/context` package.  
 For more information take a look at the [docs](https://lit.dev/docs/data/context/)
+
+**Usage**
+
+- `@withZustandProvider` to create provider component
+- `@consume` from `@lit/context` to read store value
+- `@consumeWithSelector` for performance control
+- `updateState(context, value)` to update state
 
 ```ts
 import { LitElement, html } from 'lit';
@@ -131,12 +141,13 @@ class BearsConsumer extends LitElement {
   state?: BearsState;
 
   addBears() {
-    updateState(BearContext, { bears: this.state.bears + 1 });
+    const current = this.state?.bears ?? 0;
+    updateState(BearContext, { bears: current + 1 });
   }
 
   render() {
     return html`
-      <p>${state.bears}</p>
+      <p>${this.state?.bears}</p>
       <button @click=${this.addBears}>
         Add bear
       </button>
@@ -145,27 +156,20 @@ class BearsConsumer extends LitElement {
 }
 ```
 
-To get rid of unnecessary renders you can use `consumeWithSelector` decorator
-
-**Options** 
-
-| Parameter  | Mandatory | Default     | Description                               |
-|------------|-----------|-------------|-------------------------------------------|
-| context    | Yes       | -           | Context object created by `createContext` |
-| selector   | Yes       | -           | A function that extarct data from state   |
-| equalityFn | No        | `Object.is` | A function that lets you skip re-renders  |
+To control renders you are able to use `consumeWithSelector` decorator
 
 ```ts
 import { consumeWithSelector } from 'zustand-lit/context';
 
 
-interface State {
+interface ZooState {
   bears: number;
   cows: number;
   monkeys: number;
+  snakes: number;
 }
 
-const selector = (state: State): number => state.bears;
+const selector = (state: ZooState): number => state.bears;
 
 @customElement('bears-consumer')
 class BearsConsumer extends LitElement {
@@ -174,48 +178,14 @@ class BearsConsumer extends LitElement {
 }
 ```
 
-Also it's recommended using one selector for slice of state.
-To control re-renders you can use `equalityFn` option.
+**`consumeWithSelector` options**
 
-**Note:** `equalityFn` is no needed if primitive types are selected
+| Parameter  | Mandatory | Default     | Description                               |
+|------------|-----------|-------------|-------------------------------------------|
+| context    | Yes       | -           | Context object created by `createContext` |
+| selector   | Yes       | -           | A state extractor                         |
+| equalityFn | No        | `Object.is` | A function that lets you skip re-renders  |
 
-```ts
-import { consumeWithSelector } from 'zustand-lit/context';
-
-
-interface State {
-  bears: number;
-  cows: number;
-  monkeys: number;
-}
-
-type Slice = Pick<State, 'bears' | 'cows'>;
-
-const selectSlice = (state: State): Slice => ({
-  bears: state.bears,
-  cows: state.cows,
-});
-
-const skipRender = (left: State, right: State) => {
-  return left.bears === right.bears && left.cows === right.cows;
-}
-
-@customElement('bears-consumer')
-class BearsConsumer extends LitElement {
-  @consumeWithSelector({ 
-    context: BearContext,
-    selector: selectSlice,
-    equalityFn: skipRender
-  })
-  slice?: Slice;
-}
-```
-
-## TODO
-
-- [x] Implement `consumeWithSelector` decorator
-- [ ] Add possibility using multile stores with `connect`. Add `watch` decorator to improve renders
-- [ ] Remove `observe` decorator
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details
